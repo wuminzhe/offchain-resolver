@@ -1,8 +1,9 @@
 const hre = require("hardhat");
 require('dotenv').config({ path: '../../.env' });
 
-const REGISTRY_CONTRACT_ADDRESS = '0x3173c3e608125226A0069ba75f8feb73b221974a';
+const REGISTRY_CONTRACT_ADDRESS = '0xa4656066De65A7D66a8a60e1077e99C43C4490cD';
 
+// npx hardhat run scripts/register_subname.js --network koi
 async function registerSubname(subname) {
   console.log(`Connected to network: ${hre.network.name}`);
 
@@ -11,20 +12,15 @@ async function registerSubname(subname) {
 
   try {
     const DarwiniaSubnameRegistry = await hre.ethers.getContractFactory("DarwiniaSubnameRegistry");
-    console.log("Contract factory created");
 
     const contract = await DarwiniaSubnameRegistry.attach(REGISTRY_CONTRACT_ADDRESS).connect(signer);
-    console.log("Contract attached at address:", REGISTRY_CONTRACT_ADDRESS);
-
-    console.log("Contract ABI:", JSON.stringify(contract.interface.format('json'), null, 2));
+    console.log("DarwiniaSubnameRegistry address:", REGISTRY_CONTRACT_ADDRESS);
 
     console.log(`Registering subname: ${subname}`);
     
-    // Instead of estimating gas, use a fixed gas limit
-    const gasLimit = 300000; // You can adjust this value
+    const gasLimit = 300000;
     console.log(`Using fixed gas limit: ${gasLimit}`);
 
-    // Send the transaction
     const tx = await contract.registerSubname(subname, {
       gasLimit: gasLimit
     });
@@ -41,12 +37,9 @@ async function registerSubname(subname) {
 }
 
 async function main() {
-  const subname = process.argv[2] || "foo"; // Use command line argument or default to "foo"
+  const subname = "bar";
 
-  if (!subname) {
-    console.error('Usage: npx hardhat run scripts/register_subname.js --network koi <subname>');
-    process.exit(1);
-  }
+  console.log(`Subname to register: ${subname}`);
 
   await registerSubname(subname);
 }
