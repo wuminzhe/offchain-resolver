@@ -116,3 +116,5 @@ cache
 !.yarn/versions
 
 secret.yaml
+
+packages/contracts/yarn.lock
