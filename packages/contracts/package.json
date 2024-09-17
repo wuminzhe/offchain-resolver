@@ -15,7 +15,9 @@
     "build": "npx hardhat compile",
     "prepublishOnly": "yarn build",
     "pub": "yarn publish --access public",
-    "clean": "rm -fr node_modules artifacts cache"
+    "clean": "rm -fr node_modules artifacts cache",
+    "deploy-subname-registry": "npx hardhat run scripts/deploy.js --network koi",
+    "register-subname": "npx hardhat run scripts/register_subname.js --network koi"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",

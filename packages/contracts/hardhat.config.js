@@ -3,9 +3,11 @@ require("hardhat-deploy");
 require('dotenv').config({ path: '../../.env' });
 
 const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
+const SUBNAME_REGISTRANT_PRIVATE_KEY = process.env.SUBNAME_REGISTRANT_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
 
 const real_accounts = [
-  SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY
+  SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY,
+  SUBNAME_REGISTRANT_PRIVATE_KEY
 ];
 const gatewayurl =
   'https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json';
@@ -58,12 +60,14 @@ module.exports = {
       url: "https://rpc.darwinia.network",
       chainId: 46,
       accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY],
-      gasPrice: 1000000000, // 1 gwei
+      gasPrice: 200000000000, // 200 gwei
+      gasLimit: 3000000,
+      timeout: 60000 // Increase timeout to 60 seconds
     },
     koi: {
       url: "https://koi-rpc.darwinia.network",
       chainId: 701,
-      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY],
+      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY, SUBNAME_REGISTRANT_PRIVATE_KEY],
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
