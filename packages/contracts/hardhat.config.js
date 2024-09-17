@@ -1,5 +1,8 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-deploy");
+require('@nomiclabs/hardhat-etherscan');
+require('@nomiclabs/hardhat-ethers');
+require('@nomiclabs/hardhat-waffle');
+require('hardhat-deploy');
+require('hardhat-deploy-ethers');
 require('dotenv').config({ path: '../../.env' });
 
 const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
