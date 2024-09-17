@@ -6,9 +6,14 @@ contract DarwiniaSubnameRegistry {
     address public owner;
     mapping(bytes32 => SubnameRecord) public subnames;
 
-    bytes32 public constant DARWINIA_NODE = keccak256(abi.encodePacked(keccak256(abi.encodePacked(bytes32(0), keccak256(abi.encodePacked("eth")))), keccak256(abi.encodePacked("darwinia"))));
+    bytes32 public constant DARWINIA_NODE = keccak256(
+        abi.encodePacked(
+            keccak256(abi.encodePacked(bytes32(0), keccak256(abi.encodePacked("eth")))), 
+            keccak256(abi.encodePacked("darwinia"))
+        )
+    );
     uint256 public constant REGISTRATION_PERIOD = 365 days;
-    uint256 public registrationFee = 0.01 ether;
+    uint256 public registrationFee = 10 * 10**18; // 10 RING
 
     struct SubnameRecord {
         address owner;

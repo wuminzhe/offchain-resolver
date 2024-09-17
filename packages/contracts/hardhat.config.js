@@ -1,14 +1,12 @@
-// const { task } = require('hardhat/config');
-require('@nomiclabs/hardhat-etherscan');
-require('@nomiclabs/hardhat-ethers');
-require('@nomiclabs/hardhat-waffle');
-require('hardhat-deploy');
-require('hardhat-deploy-ethers');
+require("@nomicfoundation/hardhat-toolbox");
+require("hardhat-deploy");
+require('dotenv').config({ path: '../../.env' });
 
-real_accounts = undefined;
-if (process.env.DEPLOYER_KEY && process.env.OWNER_KEY) {
-  real_accounts = [process.env.OWNER_KEY, process.env.DEPLOYER_KEY];
-}
+const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
+
+const real_accounts = [
+  SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY
+];
 const gatewayurl =
   'https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json';
 
@@ -22,7 +20,7 @@ if (process.env.REMOTE_GATEWAY) {
  */
 
 module.exports = {
-  solidity: '0.8.10',
+  solidity: '0.8.17',
   networks: {
     hardhat: {
       throwOnCallFailures: false,
@@ -56,16 +54,30 @@ module.exports = {
       accounts: real_accounts,
       gatewayurl,
     },
+    darwinia: {
+      url: "https://rpc.darwinia.network",
+      chainId: 46,
+      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY],
+      gasPrice: 1000000000, // 1 gwei
+    },
+    koi: {
+      url: "https://koi-rpc.darwinia.network",
+      chainId: 701,
+      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY],
+      gasPrice: 200000000000, // 200 gwei
+      gasLimit: 3000000,
+      timeout: 60000 // Increase timeout to 60 seconds
+    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   namedAccounts: {
     signer: {
-      default: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      default: 0,
     },
     deployer: {
-      default: 1,
+      default: 0,
     },
   },
 };
