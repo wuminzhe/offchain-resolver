@@ -46,7 +46,7 @@ const SubnameQuery: React.FC = () => {
         <button type="submit">Query Owner</button>
       </form>
       {queryResult && (
-        <p>Owner of {querySubname}.darwinia.eth: {queryResult}</p>
+        <p>Address of {querySubname}.darwinia.eth: {queryResult}</p>
       )}
     </div>
   )
