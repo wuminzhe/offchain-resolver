@@ -21,7 +21,7 @@ const darwinia_accounts = [
 ]
 
 const gatewayurl =
-  'https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json';
+  'http://213.199.47.229:8080/{sender}/{data}.json';
 
 let devgatewayurl = 'http://localhost:8080/{sender}/{data}.json';
 
@@ -40,30 +40,16 @@ module.exports = {
       throwOnCallFailures: false,
       gatewayurl: devgatewayurl,
     },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_ID}`,
       tags: ['test', 'demo'],
-      chainId: 3,
-      accounts: real_accounts,
-      gatewayurl,
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['test', 'demo'],
-      chainId: 4,
-      accounts: real_accounts,
-      gatewayurl,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['test', 'demo'],
-      chainId: 5,
+      chainId: 11155111,
       accounts: real_accounts,
       gatewayurl,
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['demo'],
+      tags: ['mainnet'],
       chainId: 1,
       accounts: real_accounts,
       gatewayurl,

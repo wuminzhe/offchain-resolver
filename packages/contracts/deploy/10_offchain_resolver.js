@@ -8,6 +8,9 @@ module.exports = async ({getNamedAccounts, deployments, network}) => {
     if(!network.config.gatewayurl){
         throw("gatewayurl is missing on hardhat.config.js");
     }
+
+    console.log("gatewayurl", network.config.gatewayurl);
+
     await deploy('OffchainResolver', {
         from: deployer,
         args: [network.config.gatewayurl, [signer]],

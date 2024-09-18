@@ -25,4 +25,4 @@ module.exports = async ({deployments}) => {
     const ownerAddress = await registry.owner(ethers.utils.namehash('darwinia.eth'));
     console.log('Owner of darwinia.eth:', ownerAddress);
 };
-module.exports.tags = ['test', "mainnet"];
+module.exports.tags = ['test'];
