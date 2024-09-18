@@ -6,6 +6,7 @@ contract DarwiniaSubnameRegistry {
     address public owner;
     mapping(bytes32 => address) public subnames;
     mapping(address => string) public addressToSubname;
+    string[] public allSubnames;
 
     bytes32 public constant DARWINIA_NODE = keccak256(
         abi.encodePacked(
@@ -33,6 +34,7 @@ contract DarwiniaSubnameRegistry {
 
         subnames[node] = msg.sender;
         addressToSubname[msg.sender] = subname;
+        allSubnames.push(subname);  // Add this line
         emit SubnameRegistered(subname, msg.sender);
     }
 
@@ -56,5 +58,13 @@ contract DarwiniaSubnameRegistry {
         address previousOwner = subnames[node];
         subnames[node] = newOwner;
         emit SubnameTransferred(subname, previousOwner, newOwner);
+    }
+
+    function getAllSubnames() public view returns (string[] memory) {
+        return allSubnames;
+    }
+
+    function getSubnameCount() public view returns (uint256) {
+        return allSubnames.length;
     }
 }
