@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 
-const REGISTRY_CONTRACT_ADDRESS = '0xa4656066De65A7D66a8a60e1077e99C43C4490cD'
-const REGISTRY_CONTRACT_ABI = [
+const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS = '0x07414d2B62A4Dd7fd1750C6DfBd9D38c250Cc573'
+const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
   "function registerSubname(string)",
+  "function getSubnameForAddress(address addr) public view returns (string memory)"
 ]
 
 const SubnameRegistration: React.FC = () => {

@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 contract DarwiniaSubnameRegistry {
     address public owner;
     mapping(bytes32 => address) public subnames;
+    mapping(address => string) public addressToSubname;
 
     bytes32 public constant DARWINIA_NODE = keccak256(
         abi.encodePacked(
@@ -31,7 +32,12 @@ contract DarwiniaSubnameRegistry {
         require(subnames[node] == address(0), "Subname is already registered");
 
         subnames[node] = msg.sender;
+        addressToSubname[msg.sender] = subname;
         emit SubnameRegistered(subname, msg.sender);
+    }
+
+    function getSubnameForAddress(address addr) public view returns (string memory) {
+        return addressToSubname[addr];
     }
 
     function getSubnameOwner(string calldata subname) public view returns (address) {

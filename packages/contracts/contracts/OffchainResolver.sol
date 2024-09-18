@@ -38,7 +38,7 @@ contract OffchainResolver is IExtendedResolver, SupportsInterface {
      * @param data The ABI encoded data for the underlying resolution function (Eg, addr(bytes32), text(bytes32,string), etc).
      * @return The return data, ABI encoded identically to the underlying function.
      */
-    function resolve(bytes calldata name, bytes calldata data) external override view returns(bytes memory) {
+    function resolve(bytes calldata name, bytes calldata data) public override view returns(bytes memory) {
         bytes memory callData = abi.encodeWithSelector(IResolverService.resolve.selector, name, data);
         string[] memory urls = new string[](1);
         urls[0] = url;
@@ -63,6 +63,15 @@ contract OffchainResolver is IExtendedResolver, SupportsInterface {
     }
 
     function supportsInterface(bytes4 interfaceID) public pure override returns(bool) {
-        return interfaceID == type(IExtendedResolver).interfaceId || super.supportsInterface(interfaceID);
+        return interfaceID == type(IExtendedResolver).interfaceId || 
+        super.supportsInterface(interfaceID) ||
+        interfaceID == 0x3b3b57de;
+    }
+
+    // https://docs.ens.domains/ensip/1#contract-address-interface
+    function addr(bytes32 node) public view returns (address) {
+        bytes memory data = abi.encodeWithSelector(0x3b3b57de, node);
+        bytes memory result = this.resolve(abi.encodePacked(node), data);
+        return abi.decode(result, (address));
     }
 }
