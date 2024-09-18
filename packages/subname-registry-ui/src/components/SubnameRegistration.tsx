@@ -86,7 +86,7 @@ const SubnameRegistration: React.FC = () => {
         const tx = await contract.registerSubname(subname)
         await tx.wait()
 
-        setStatus(`Subname "${subname}" registered successfully!`)
+        setStatus(`Subname "${subname}.darwinia.eth" registered successfully!`)
         setSubname('')
         fetchRegisteredSubname()
       } else {
@@ -114,14 +114,19 @@ const SubnameRegistration: React.FC = () => {
         </div>
       )}
       <form onSubmit={registerSubname}>
-        <input
-          type="text"
-          value={subname}
-          onChange={(e) => setSubname(e.target.value)}
-          placeholder="Enter subname"
-          required
-        />
-        <button type="submit" disabled={!isConnected}>Register</button>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={subname}
+            onChange={(e) => setSubname(e.target.value)}
+            placeholder="Enter subname"
+            required
+            style={{ marginRight: '5px' }}
+          />
+          <span>.darwinia.eth</span>&nbsp;&nbsp;
+          <button type="submit" disabled={!isConnected}>Register</button>
+        </div>
+        
       </form>
       {status && <p>{status}</p>}
     </div>
