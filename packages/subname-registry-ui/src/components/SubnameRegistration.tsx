@@ -7,6 +7,7 @@ const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
   "function getSubnameForAddress(address addr) public view returns (string memory)"
 ]
 
+const KOI_CHAIN_ID = 701
 declare global {
   interface Window {
     ethereum?: any;
@@ -19,6 +20,7 @@ const SubnameRegistration: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [isConnected, setIsConnected] = useState(false)
   const [registeredSubname, setRegisteredSubname] = useState('')
+  const [isCorrectNetwork, setIsCorrectNetwork] = useState(false)
 
   useEffect(() => {
     checkWalletConnection()
@@ -26,6 +28,7 @@ const SubnameRegistration: React.FC = () => {
 
   useEffect(() => {
     if (isConnected) {
+      checkNetwork()
       fetchRegisteredSubname()
     }
   }, [isConnected])
@@ -44,6 +47,17 @@ const SubnameRegistration: React.FC = () => {
     }
   }
 
+  const checkNetwork = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' })
+        setIsCorrectNetwork(parseInt(chainId) === KOI_CHAIN_ID)
+      } catch (error) {
+        console.error('Error checking network:', error)
+      }
+    }
+  }
+
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
@@ -51,6 +65,7 @@ const SubnameRegistration: React.FC = () => {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' })
         setWalletAddress(accounts[0])
         setIsConnected(true)
+        checkNetwork()
       } catch (error) {
         console.error('Error connecting wallet:', error)
         setStatus('Error connecting wallet. Please try again.')
@@ -61,7 +76,7 @@ const SubnameRegistration: React.FC = () => {
   }
 
   const fetchRegisteredSubname = async () => {
-    if (typeof window.ethereum !== 'undefined' && isConnected) {
+    if (typeof window.ethereum !== 'undefined' && isConnected && isCorrectNetwork) {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const contract = new ethers.Contract(DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS, DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI, provider)
@@ -75,6 +90,10 @@ const SubnameRegistration: React.FC = () => {
 
   const registerSubname = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!isCorrectNetwork) {
+      setStatus('Please switch to the Koi network to register a subname.')
+      return
+    }
     setStatus('Processing...')
 
     try {
@@ -99,11 +118,9 @@ const SubnameRegistration: React.FC = () => {
       if (error instanceof Error) {
         errorMessage = error.message
       } else if (typeof error === 'object' && error !== null) {
-        // Some blockchain errors might be in a different format
         errorMessage = JSON.stringify(error)
       }
 
-      // Check for specific error messages
       if (errorMessage.includes('Subname is already registered')) {
         setStatus(`Error: Subname "${subname}.darwinia.eth" is already registered.`)
       } else if (errorMessage.includes('user rejected transaction')) {
@@ -132,7 +149,7 @@ const SubnameRegistration: React.FC = () => {
   }
 
   const buttonStyle: React.CSSProperties = {
-    width: '100%', // Make button full width
+    width: '100%',
     padding: '10px 20px',
     fontSize: '16px',
     backgroundColor: '#4CAF50',
@@ -156,6 +173,8 @@ const SubnameRegistration: React.FC = () => {
       <h2 style={headingStyle}>Register Darwinia Subname</h2>
       {!isConnected ? (
         <button onClick={connectWallet} style={buttonStyle}>Connect Wallet</button>
+      ) : !isCorrectNetwork ? (
+        <p style={{ color: 'red' }}>Please switch to the Koi network to use this application.</p>
       ) : (
         <div>
           <p>Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
@@ -176,13 +195,13 @@ const SubnameRegistration: React.FC = () => {
               />
               <span style={{ marginLeft: '5px' }}>.darwinia.eth</span>
             </div>
-            <button type="submit" style={buttonStyle} disabled={!isConnected}>Register</button>
+            <button type="submit" style={buttonStyle} disabled={!isConnected || !isCorrectNetwork}>Register</button>
           </form>
           {status && (
             <p style={{ 
               marginTop: '10px', 
               color: status.includes('Error') ? 'red' : 'green',
-              wordBreak: 'break-word'  // Add this line to handle long error messages
+              wordBreak: 'break-word'
             }}>
               {status}
             </p>
