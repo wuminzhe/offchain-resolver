@@ -99,6 +99,7 @@ export function makeServer(signer: ethers.utils.SigningKey, db: Database) {
       type: 'resolve',
       func: async ([encodedName, data]: Result, request) => {
         const name = decodeDnsName(Buffer.from(encodedName.slice(2), 'hex'));
+        console.log("querying", name, data);
         // Query the database
         const { result, validUntil } = await query(db, name, data);
 

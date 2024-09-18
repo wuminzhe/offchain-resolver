@@ -23,8 +23,20 @@ export class DarwiniaDatabase implements Database {
       return { addr: ethers.constants.AddressZero, ttl: DEFAULT_TTL };
     }
 
+    if (name === 'darwinia.eth') {
+      return { addr: '0x1234567890123456789012345678901234567890', ttl: DEFAULT_TTL };
+    }
+
+    // "a.b.darwinia.eth" is not allowed. only "a.darwinia.eth" is allowed.
+    if (name.split('.').length > 3) {
+      return { addr: ethers.constants.AddressZero, ttl: DEFAULT_TTL };
+    }
+
     try {
-      const owner = await this.contract.getSubnameOwner(name);
+      console.log('querying', name);
+      const subname = name.split('.')[0]
+      const owner = await this.contract.getSubnameOwner(subname);
+      console.log('owner', owner);
       return { addr: owner, ttl: DEFAULT_TTL };
     } catch (error) {
       console.error('Error fetching subname owner:', error);
