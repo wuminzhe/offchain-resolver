@@ -1,8 +1,6 @@
 import { ethers } from 'ethers';
 import { Database } from './server';
 
-const DARWINIA_RPC_URL = 'https://koi-rpc.darwinia.network';
-const CONTRACT_ADDRESS = '0x3173c3e608125226A0069ba75f8feb73b221974a'; // Replace with the actual deployed contract address
 const DEFAULT_TTL = 300; // 5 minutes
 
 const ABI = [
@@ -13,9 +11,9 @@ export class DarwiniaDatabase implements Database {
   private provider: ethers.providers.JsonRpcProvider;
   private contract: ethers.Contract;
 
-  constructor() {
-    this.provider = new ethers.providers.JsonRpcProvider(DARWINIA_RPC_URL);
-    this.contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, this.provider);
+  constructor(darwinia_rpc_url: string, darwinia_subname_registry_contract_address: string) {
+    this.provider = new ethers.providers.JsonRpcProvider(darwinia_rpc_url);
+    this.contract = new ethers.Contract(darwinia_subname_registry_contract_address, ABI, this.provider);
   }
 
   async addr(name: string, coinType: number): Promise<{ addr: string; ttl: number }> {
