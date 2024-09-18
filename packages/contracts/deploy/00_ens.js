@@ -2,10 +2,12 @@ const { ethers } = require("hardhat");
 
 module.exports = async ({deployments}) => {
     const {deploy} = deployments;
-    const signers = await ethers.getSigners();
-    const owner = signers[0].address;
+
+    console.log("\n= Deploying ENSRegistry");
+
+    const {deployer} = await getNamedAccounts();
     await deploy('ENSRegistry', {
-        from: owner,
+        from: deployer,
         args: [],
         log: true,
     });

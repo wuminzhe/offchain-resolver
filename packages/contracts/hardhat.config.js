@@ -5,20 +5,19 @@ require('hardhat-deploy');
 require('hardhat-deploy-ethers');
 require('dotenv').config({ path: '../../.env' });
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY
 const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY;
 const SUBNAME_REGISTRANT_PRIVATE_KEY = process.env.SUBNAME_REGISTRANT_PRIVATE_KEY;
 
-const real_accounts = [
-  SIGNER_PRIVATE_KEY,
-  PRIVATE_KEY
-];
+console.log("DEPLOYER_PRIVATE_KEY", DEPLOYER_PRIVATE_KEY);
 
-const darwinia_accounts = [
+const real_accounts = [
+  DEPLOYER_PRIVATE_KEY,
+  SIGNER_PRIVATE_KEY,
   SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY,
-  SUBNAME_REGISTRANT_PRIVATE_KEY
-]
+  SUBNAME_REGISTRANT_PRIVATE_KEY,
+];
 
 const gatewayurl =
   'http://213.199.47.229:8080/{sender}/{data}.json';
@@ -39,6 +38,7 @@ module.exports = {
     hardhat: {
       throwOnCallFailures: false,
       gatewayurl: devgatewayurl,
+      accounts: real_accounts.map(privateKey => ({privateKey, balance: '10000000000000000000000'})),
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_ID}`,
@@ -57,7 +57,7 @@ module.exports = {
     darwinia: {
       url: "https://rpc.darwinia.network",
       chainId: 46,
-      accounts: darwinia_accounts,
+      accounts: real_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -65,7 +65,7 @@ module.exports = {
     koi: {
       url: "https://koi-rpc.darwinia.network",
       chainId: 701,
-      accounts: darwinia_accounts,
+      accounts: real_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -75,11 +75,17 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   namedAccounts: {
-    signer: {
+    deployer: {
       default: 0,
     },
-    deployer: {
+    signer: {
       default: 1,
+    },
+    subname_registry_deployer: {
+      default: 2,
+    },
+    subname_registrant: {
+      default: 3,
     },
   },
 };
