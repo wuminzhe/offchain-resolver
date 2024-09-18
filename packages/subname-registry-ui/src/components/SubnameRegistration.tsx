@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import SubnameManagement from './SubnameManagement'
 
 const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS = '0xf6B8A7C7B82E3Bb3551393931d71987908bF486f'
 const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
   "function registerSubname(string)",
-  "function getSubnameForAddress(address addr) public view returns (string memory)",
-  "function owner() public view returns (address)"
+  "function getSubnameForAddress(address addr) public view returns (string memory)"
 ]
 
 declare global {
@@ -21,7 +19,6 @@ const SubnameRegistration: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [isConnected, setIsConnected] = useState(false)
   const [registeredSubname, setRegisteredSubname] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     checkWalletConnection()
@@ -30,12 +27,6 @@ const SubnameRegistration: React.FC = () => {
   useEffect(() => {
     if (isConnected) {
       fetchRegisteredSubname()
-    }
-  }, [isConnected])
-
-  useEffect(() => {
-    if (isConnected) {
-      checkAdminStatus()
     }
   }, [isConnected])
 
@@ -78,22 +69,6 @@ const SubnameRegistration: React.FC = () => {
         setRegisteredSubname(subname)
       } catch (error) {
         console.error('Error fetching registered subname:', error)
-      }
-    }
-  }
-
-  const checkAdminStatus = async () => {
-    if (typeof window.ethereum !== 'undefined' && isConnected) {
-      try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const contract = new ethers.Contract(DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS, DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI, provider)
-        const ownerAddress = await contract.owner()
-        const isAdminNow = ownerAddress.toLowerCase() === walletAddress.toLowerCase()
-        console.log("Checking admin status:", { ownerAddress, walletAddress, isAdminNow });
-        setIsAdmin(isAdminNow)
-      } catch (error) {
-        console.error('Error checking admin status:', error)
-        setIsAdmin(false)
       }
     }
   }
@@ -148,13 +123,11 @@ const SubnameRegistration: React.FC = () => {
             required
             style={{ marginRight: '5px' }}
           />
-          <span>.darwinia.eth</span>&nbsp;&nbsp;
-          <button type="submit" disabled={!isConnected}>Register</button>
+          <span>.darwinia.eth</span>
         </div>
+        <button type="submit" disabled={!isConnected}>Register</button>
       </form>
       {status && <p>{status}</p>}
-      
-      {isAdmin && <SubnameManagement />}
     </div>
   )
 }

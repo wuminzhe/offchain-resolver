@@ -32,13 +32,17 @@ const SubnameQuery: React.FC = () => {
     <div>
       <h2>Subname Query</h2>
       <form onSubmit={querySubnameOwner}>
-        <input
-          type="text"
-          value={querySubname}
-          onChange={(e) => setQuerySubname(e.target.value)}
-          placeholder="Enter subname to query"
-          required
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={querySubname}
+            onChange={(e) => setQuerySubname(e.target.value)}
+            placeholder="Enter subname"
+            required
+            style={{ marginRight: '5px' }}
+          />
+          <span>.darwinia.eth</span>
+        </div>
         <button type="submit">Query Owner</button>
       </form>
       {queryResult && (
