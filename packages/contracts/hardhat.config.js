@@ -10,11 +10,12 @@ const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY
 const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY;
 const SUBNAME_REGISTRANT_PRIVATE_KEY = process.env.SUBNAME_REGISTRANT_PRIVATE_KEY;
 
-console.log("DEPLOYER_PRIVATE_KEY", DEPLOYER_PRIVATE_KEY);
-
 const real_accounts = [
   DEPLOYER_PRIVATE_KEY,
   SIGNER_PRIVATE_KEY,
+];
+
+const darwinia_accounts = [
   SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY,
   SUBNAME_REGISTRANT_PRIVATE_KEY,
 ];
@@ -57,7 +58,7 @@ module.exports = {
     darwinia: {
       url: "https://rpc.darwinia.network",
       chainId: 46,
-      accounts: real_accounts,
+      accounts: darwinia_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -65,7 +66,7 @@ module.exports = {
     koi: {
       url: "https://koi-rpc.darwinia.network",
       chainId: 701,
-      accounts: real_accounts,
+      accounts: darwinia_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -82,10 +83,10 @@ module.exports = {
       default: 1,
     },
     subname_registry_deployer: {
-      default: 2,
+      default: 0,
     },
     subname_registrant: {
-      default: 3,
+      default: 1,
     },
   },
 };
