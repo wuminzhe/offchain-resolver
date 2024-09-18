@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { ethers } from 'ethers'
+import React from 'react'
 import SubnameRegistration from '../components/SubnameRegistration'
 import SubnameQuery from '../components/SubnameQuery'
 import SubnameManagement from '../components/SubnameManagement'
@@ -10,44 +9,31 @@ const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
 ]
 
 const Home: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [walletAddress, setWalletAddress] = useState('')
-
-  useEffect(() => {
-    checkWalletConnection()
-  }, [])
-
-  const checkWalletConnection = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' })
-        if (accounts.length > 0) {
-          setWalletAddress(accounts[0])
-          checkAdminStatus(accounts[0])
-        }
-      } catch (error) {
-        console.error('Error checking wallet connection:', error)
-      }
-    }
+  const containerStyle: React.CSSProperties = {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
   }
 
-  const checkAdminStatus = async (address: string) => {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const contract = new ethers.Contract(DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS, DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI, provider)
-      const ownerAddress = await contract.owner()
-      setIsAdmin(ownerAddress.toLowerCase() === address.toLowerCase())
-    } catch (error) {
-      console.error('Error checking admin status:', error)
-    }
+  const headingStyle: React.CSSProperties = {
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: '30px',
   }
 
   return (
-    <div>
-      <h1>Darwinia Subname Registry</h1>
-      <SubnameRegistration />
-      <SubnameQuery />
-      <SubnameManagement />
+    <div style={containerStyle}>
+      <h1 style={headingStyle}>Darwinia Subname Registry</h1>
+      {DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS ? (
+        <>
+          <SubnameRegistration />
+          <SubnameQuery />
+          <SubnameManagement />
+        </>
+      ) : (
+        <p style={{ textAlign: 'center', color: 'red' }}>Error: Darwinia Subname Registry contract address is not set</p>
+      )}
     </div>
   )
 }

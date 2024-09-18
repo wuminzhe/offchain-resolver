@@ -98,36 +98,73 @@ const SubnameRegistration: React.FC = () => {
     }
   }
 
+  const containerStyle: React.CSSProperties = {
+    maxWidth: '600px',
+    margin: '20px auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  }
+
+  const headingStyle: React.CSSProperties = {
+    color: '#333',
+    borderBottom: '2px solid #ddd',
+    paddingBottom: '10px',
+    marginBottom: '20px',
+  }
+
+  const buttonStyle: React.CSSProperties = {
+    width: '100%', // Make button full width
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  }
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
+    marginBottom: '10px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+  }
+
   return (
-    <div>
-      <h2>Register Darwinia Subname</h2>
+    <div style={containerStyle}>
+      <h2 style={headingStyle}>Register Darwinia Subname</h2>
       {!isConnected ? (
-        <button onClick={connectWallet}>Connect Wallet</button>
+        <button onClick={connectWallet} style={buttonStyle}>Connect Wallet</button>
       ) : (
         <div>
           <p>Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
           {registeredSubname ? (
-            <p>Your registered subname: {registeredSubname}.darwinia.eth</p>
+            <p>Your registered subname: <strong>{registeredSubname}.darwinia.eth</strong></p>
           ) : (
             <p>You don't have a registered subname yet.</p>
           )}
+          <form onSubmit={registerSubname}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+              <input
+                type="text"
+                value={subname}
+                onChange={(e) => setSubname(e.target.value)}
+                placeholder="Enter subname"
+                required
+                style={inputStyle}
+              />
+              <span style={{ marginLeft: '5px' }}>.darwinia.eth</span>
+            </div>
+            <button type="submit" style={buttonStyle} disabled={!isConnected}>Register</button>
+          </form>
+          {status && <p style={{ marginTop: '10px', color: status.includes('Error') ? 'red' : 'green' }}>{status}</p>}
         </div>
       )}
-      <form onSubmit={registerSubname}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <input
-            type="text"
-            value={subname}
-            onChange={(e) => setSubname(e.target.value)}
-            placeholder="Enter subname"
-            required
-            style={{ marginRight: '5px' }}
-          />
-          <span>.darwinia.eth</span>
-        </div>
-        <button type="submit" disabled={!isConnected}>Register</button>
-      </form>
-      {status && <p>{status}</p>}
     </div>
   )
 }

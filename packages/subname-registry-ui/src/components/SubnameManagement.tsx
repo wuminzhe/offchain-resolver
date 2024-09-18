@@ -36,21 +36,56 @@ const SubnameManagement: React.FC = () => {
     }
   }
 
+  const containerStyle: React.CSSProperties = {
+    maxWidth: '600px', // Changed from 800px to 600px to match other components
+    margin: '20px auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  }
+
+  const headingStyle: React.CSSProperties = {
+    color: '#333',
+    borderBottom: '2px solid #ddd',
+    paddingBottom: '10px',
+    marginBottom: '20px',
+  }
+
+  const tableStyle: React.CSSProperties = {
+    width: '100%',
+    borderCollapse: 'collapse',
+  }
+
+  const thStyle: React.CSSProperties = {
+    backgroundColor: '#f2f2f2',
+    padding: '12px',
+    textAlign: 'left',
+    borderBottom: '1px solid #ddd',
+  }
+
+  const tdStyle: React.CSSProperties = {
+    padding: '12px',
+    borderBottom: '1px solid #ddd',
+    wordBreak: 'break-all', // Added to handle long addresses
+  }
+
   return (
-    <div>
-      <h2>Subname Management</h2>
-      <table>
+    <div style={containerStyle}>
+      <h2 style={headingStyle}>Subname Management</h2>
+      <table style={tableStyle}>
         <thead>
           <tr>
-            <th>Subname</th>
-            <th>Owner</th>
+            <th style={thStyle}>Subname</th>
+            <th style={thStyle}>Owner</th>
           </tr>
         </thead>
         <tbody>
           {subnames.map((subname, index) => (
             <tr key={index}>
-              <td>{subname.name}.darwinia.eth</td>
-              <td>{subname.owner}</td>
+              <td style={tdStyle}>{subname.name}.darwinia.eth</td>
+              <td style={tdStyle}>{subname.owner}</td>
             </tr>
           ))}
         </tbody>
