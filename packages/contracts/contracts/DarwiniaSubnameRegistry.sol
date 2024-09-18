@@ -31,20 +31,21 @@ contract DarwiniaSubnameRegistry {
     function registerSubname(string calldata subname) public {
         bytes32 node = keccak256(abi.encodePacked(DARWINIA_NODE, keccak256(bytes(subname))));
         require(subnames[node] == address(0), "Subname is already registered");
+        require(bytes(addressToSubname[msg.sender]).length == 0, "Address already has a registered subname");
 
         subnames[node] = msg.sender;
         addressToSubname[msg.sender] = subname;
-        allSubnames.push(subname);  // Add this line
+        allSubnames.push(subname);
         emit SubnameRegistered(subname, msg.sender);
-    }
-
-    function getSubnameForAddress(address addr) public view returns (string memory) {
-        return addressToSubname[addr];
     }
 
     function getSubnameOwner(string calldata subname) public view returns (address) {
         bytes32 node = keccak256(abi.encodePacked(DARWINIA_NODE, keccak256(bytes(subname))));
         return subnames[node];
+    }
+
+    function getSubnameForAddress(address addr) public view returns (string memory) {
+        return addressToSubname[addr];
     }
 
     function transferOwnership(address newOwner) public onlyOwner {
@@ -55,8 +56,12 @@ contract DarwiniaSubnameRegistry {
     function transferSubname(string calldata subname, address newOwner) public {
         bytes32 node = keccak256(abi.encodePacked(DARWINIA_NODE, keccak256(bytes(subname))));
         require(subnames[node] == msg.sender || msg.sender == owner, "Only the subname owner or admin can transfer");
+        require(bytes(addressToSubname[newOwner]).length == 0, "New owner already has a registered subname");
+        
         address previousOwner = subnames[node];
         subnames[node] = newOwner;
+        delete addressToSubname[previousOwner];
+        addressToSubname[newOwner] = subname;
         emit SubnameTransferred(subname, previousOwner, newOwner);
     }
 
