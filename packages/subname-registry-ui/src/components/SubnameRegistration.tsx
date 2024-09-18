@@ -93,8 +93,24 @@ const SubnameRegistration: React.FC = () => {
         setStatus('Please connect your wallet to register a subname.')
       }
     } catch (error) {
-      console.error('Error:', error)
-      setStatus('Error registering subname. Please try again.')
+      console.error('Error details:', error)
+      let errorMessage = 'An unknown error occurred. Please try again.'
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'object' && error !== null) {
+        // Some blockchain errors might be in a different format
+        errorMessage = JSON.stringify(error)
+      }
+
+      // Check for specific error messages
+      if (errorMessage.includes('Subname is already registered')) {
+        setStatus(`Error: Subname "${subname}.darwinia.eth" is already registered.`)
+      } else if (errorMessage.includes('user rejected transaction')) {
+        setStatus('Error: Transaction was rejected by the user.')
+      } else {
+        setStatus(`Error: ${errorMessage}`)
+      }
     }
   }
 
@@ -162,7 +178,15 @@ const SubnameRegistration: React.FC = () => {
             </div>
             <button type="submit" style={buttonStyle} disabled={!isConnected}>Register</button>
           </form>
-          {status && <p style={{ marginTop: '10px', color: status.includes('Error') ? 'red' : 'green' }}>{status}</p>}
+          {status && (
+            <p style={{ 
+              marginTop: '10px', 
+              color: status.includes('Error') ? 'red' : 'green',
+              wordBreak: 'break-word'  // Add this line to handle long error messages
+            }}>
+              {status}
+            </p>
+          )}
         </div>
       )}
     </div>
