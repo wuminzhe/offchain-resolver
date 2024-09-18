@@ -14,7 +14,11 @@ declare global {
   }
 }
 
-const SubnameRegistration: React.FC = () => {
+interface SubnameRegistrationProps {
+  onSubnameRegistered: () => void;
+}
+
+const SubnameRegistration: React.FC<SubnameRegistrationProps> = ({ onSubnameRegistered }) => {
   const [subname, setSubname] = useState('')
   const [status, setStatus] = useState('')
   const [walletAddress, setWalletAddress] = useState('')
@@ -32,6 +36,12 @@ const SubnameRegistration: React.FC = () => {
       fetchRegisteredSubname()
     }
   }, [isConnected])
+
+  useEffect(() => {
+    if (isConnected && isCorrectNetwork) {
+      fetchRegisteredSubname()
+    }
+  }, [isConnected, isCorrectNetwork, walletAddress])
 
   const checkWalletConnection = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -80,11 +90,19 @@ const SubnameRegistration: React.FC = () => {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const contract = new ethers.Contract(DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS, DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI, provider)
+        console.log('Fetching subname for address:', walletAddress)
         const subname = await contract.getSubnameForAddress(walletAddress)
+        console.log('Fetched subname:', subname)
         setRegisteredSubname(subname)
       } catch (error) {
         console.error('Error fetching registered subname:', error)
       }
+    } else {
+      console.log('Cannot fetch subname: ', { 
+        ethereum: typeof window.ethereum !== 'undefined', 
+        isConnected, 
+        isCorrectNetwork 
+      })
     }
   }
 
@@ -108,6 +126,7 @@ const SubnameRegistration: React.FC = () => {
         setStatus(`Subname "${subname}.darwinia.eth" registered successfully!`)
         setSubname('')
         fetchRegisteredSubname()
+        onSubnameRegistered() // Call the callback function
       } else {
         setStatus('Please connect your wallet to register a subname.')
       }
@@ -167,6 +186,9 @@ const SubnameRegistration: React.FC = () => {
     border: '1px solid #ddd',
     borderRadius: '4px',
   }
+
+  console.log('Contract Address:', DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS)
+  console.log('Contract ABI:', DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI)
 
   return (
     <div style={containerStyle}>

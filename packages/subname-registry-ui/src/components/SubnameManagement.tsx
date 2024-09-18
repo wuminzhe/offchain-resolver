@@ -12,12 +12,16 @@ interface Subname {
   owner: string;
 }
 
-const SubnameManagement: React.FC = () => {
+interface SubnameManagementProps {
+  refreshTrigger: number;
+}
+
+const SubnameManagement: React.FC<SubnameManagementProps> = ({ refreshTrigger }) => {
   const [subnames, setSubnames] = useState<Subname[]>([])
 
   useEffect(() => {
     fetchAllSubnames()
-  }, [])
+  }, [refreshTrigger]) // Add refreshTrigger to the dependency array
 
   const fetchAllSubnames = async () => {
     try {
