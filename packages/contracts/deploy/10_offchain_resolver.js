@@ -1,5 +1,7 @@
 const { ethers } = require("hardhat");
 
+// To deploy to mainnet, run:
+// npx hardhat deploy --network mainnet --tags mainnet
 module.exports = async ({getNamedAccounts, deployments, network}) => {
     const {deploy} = deployments;
     const {deployer, signer} = await getNamedAccounts();
@@ -12,4 +14,4 @@ module.exports = async ({getNamedAccounts, deployments, network}) => {
         log: true,
     });
 };
-module.exports.tags = ['test', 'demo'];
+module.exports.tags = ['test', 'demo', 'mainnet'];

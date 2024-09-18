@@ -5,17 +5,26 @@ require('hardhat-deploy');
 require('hardhat-deploy-ethers');
 require('dotenv').config({ path: '../../.env' });
 
-const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
-const SUBNAME_REGISTRANT_PRIVATE_KEY = process.env.SUBNAME_REGISTRANT_PRIVATE_KEY || "0xa6d53aff9e991a71a1b39f553e6661bf7969930790f7aa1a23e438119f7ec7e2";
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY
+const SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY = process.env.SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY;
+const SUBNAME_REGISTRANT_PRIVATE_KEY = process.env.SUBNAME_REGISTRANT_PRIVATE_KEY;
 
 const real_accounts = [
+  SIGNER_PRIVATE_KEY,
+  PRIVATE_KEY
+];
+
+const darwinia_accounts = [
   SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY,
   SUBNAME_REGISTRANT_PRIVATE_KEY
-];
+]
+
 const gatewayurl =
   'https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json';
 
 let devgatewayurl = 'http://localhost:8080/{sender}/{data}.json';
+
 if (process.env.REMOTE_GATEWAY) {
   devgatewayurl =
     `${process.env.REMOTE_GATEWAY}/{sender}/{data}.json`;
@@ -62,7 +71,7 @@ module.exports = {
     darwinia: {
       url: "https://rpc.darwinia.network",
       chainId: 46,
-      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY],
+      accounts: darwinia_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -70,7 +79,7 @@ module.exports = {
     koi: {
       url: "https://koi-rpc.darwinia.network",
       chainId: 701,
-      accounts: [SUBNAME_REGISTRY_DEPLOYER_PRIVATE_KEY, SUBNAME_REGISTRANT_PRIVATE_KEY],
+      accounts: darwinia_accounts,
       gasPrice: 200000000000, // 200 gwei
       gasLimit: 3000000,
       timeout: 60000 // Increase timeout to 60 seconds
@@ -84,7 +93,7 @@ module.exports = {
       default: 0,
     },
     deployer: {
-      default: 0,
+      default: 1,
     },
   },
 };

@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");  
+
 module.exports = async ({deployments}) => {
     const {deploy} = deployments;
     const signers = await ethers.getSigners();
@@ -24,4 +25,4 @@ module.exports = async ({deployments}) => {
     const ownerAddress = await registry.owner(ethers.utils.namehash('darwinia.eth'));
     console.log('Owner of darwinia.eth:', ownerAddress);
 };
-module.exports.tags = ['test'];
+module.exports.tags = ['test', "mainnet"];
