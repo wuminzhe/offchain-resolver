@@ -47,7 +47,7 @@ const Home: React.FC = () => {
       <h1>Darwinia Subname Registry</h1>
       <SubnameRegistration />
       <SubnameQuery />
-      {isAdmin && <SubnameManagement />}
+      <SubnameManagement />
     </div>
   )
 }

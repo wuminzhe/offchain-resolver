@@ -7,6 +7,7 @@ const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
 ]
 
 const SubnameQuery: React.FC = () => {
+  const [inputSubname, setInputSubname] = useState('')
   const [querySubname, setQuerySubname] = useState('')
   const [queryResult, setQueryResult] = useState('')
 
@@ -17,14 +18,17 @@ const SubnameQuery: React.FC = () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const contract = new ethers.Contract(DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS, DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI, provider)
         
-        const owner = await contract.getSubnameOwner(querySubname)
+        const owner = await contract.getSubnameOwner(inputSubname)
         setQueryResult(owner !== ethers.constants.AddressZero ? owner : 'Subname not registered')
+        setQuerySubname(inputSubname) // Update querySubname after the query is complete
       } catch (error) {
         console.error('Error querying subname owner:', error)
         setQueryResult('Error querying subname owner')
+        setQuerySubname(inputSubname) // Update querySubname even if there's an error
       }
     } else {
       setQueryResult('Please install MetaMask to use this feature.')
+      setQuerySubname(inputSubname) // Update querySubname even if MetaMask is not available
     }
   }
 
@@ -35,17 +39,17 @@ const SubnameQuery: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <input
             type="text"
-            value={querySubname}
-            onChange={(e) => setQuerySubname(e.target.value)}
+            value={inputSubname}
+            onChange={(e) => setInputSubname(e.target.value)}
             placeholder="Enter subname"
             required
             style={{ marginRight: '5px' }}
           />
           <span>.darwinia.eth</span>
         </div>
-        <button type="submit">Query Owner</button>
+        <button type="submit">Query</button>
       </form>
-      {queryResult && (
+      {queryResult && querySubname && (
         <p>Address of {querySubname}.darwinia.eth: {queryResult}</p>
       )}
     </div>
