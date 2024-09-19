@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ethers } from 'ethers'
 
-const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS = '0xf6B8A7C7B82E3Bb3551393931d71987908bF486f'
+import { DARWINIA_SUBNAME_REGISTRY_CONTRACT_ADDRESS } from '../config';
 const DARWINIA_SUBNAME_REGISTRY_CONTRACT_ABI = [
   "function getSubnameOwner(string) public view returns (address)"
 ]
