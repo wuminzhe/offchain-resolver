@@ -21,11 +21,11 @@ export class DarwiniaDatabase implements Database {
       return { addr: ethers.constants.AddressZero, ttl: DEFAULT_TTL };
     }
 
-    if (name === 'darwinia.eth') {
+    if (name === 'ringdao.eth') {
       return { addr: '0x1234567890123456789012345678901234567890', ttl: DEFAULT_TTL };
     }
 
-    // "a.b.darwinia.eth" is not allowed. only "a.darwinia.eth" is allowed.
+    // "a.b.ringdao.eth" is not allowed. only "a.ringdao.eth" is allowed.
     if (name.split('.').length > 3) {
       return { addr: ethers.constants.AddressZero, ttl: DEFAULT_TTL };
     }
