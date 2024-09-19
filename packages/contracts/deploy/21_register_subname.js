@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 module.exports = async ({deployments, network}) => {
     const {deploy} = deployments;
 
-    console.log("\n= Registering subname on ", network.name);
+    console.log("\n= Registering subname on", network.name);
 
     const {subname_registrant} = await getNamedAccounts();
 
@@ -16,7 +16,7 @@ module.exports = async ({deployments, network}) => {
 
     // Get the signer for the subname_registrant
     const signer = await ethers.getSigner(subname_registrant);
-    console.log("Registered by ", signer.address);
+    console.log("Registered by", signer.address);
 
     // Connect the contract to the correct signer
     const connectedContract = darwiniaSubnameRegistry.connect(signer);
