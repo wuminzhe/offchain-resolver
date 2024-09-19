@@ -21,7 +21,7 @@ const darwinia_accounts = [
 ];
 
 const gatewayurl =
-  'https://213.199.47.229/{sender}/{data}.json';
+  'https://g2d.site/{sender}/{data}.json';
 
 let devgatewayurl = 'http://localhost:8080/{sender}/{data}.json';
 
