@@ -123,7 +123,7 @@ const SubnameRegistration: React.FC<SubnameRegistrationProps> = ({ onSubnameRegi
         const tx = await contract.registerSubname(subname)
         await tx.wait()
 
-        setStatus(`Subname "${subname}.darwinia.eth" registered successfully!`)
+        setStatus(`Subname "${subname}.ringdao.eth" registered successfully!`)
         setSubname('')
         fetchRegisteredSubname()
         onSubnameRegistered() // Call the callback function
@@ -141,7 +141,7 @@ const SubnameRegistration: React.FC<SubnameRegistrationProps> = ({ onSubnameRegi
       }
 
       if (errorMessage.includes('Subname is already registered')) {
-        setStatus(`Error: Subname "${subname}.darwinia.eth" is already registered.`)
+        setStatus(`Error: Subname "${subname}.ringdao.eth" is already registered.`)
       } else if (errorMessage.includes('user rejected transaction')) {
         setStatus('Error: Transaction was rejected by the user.')
       } else {
@@ -201,7 +201,7 @@ const SubnameRegistration: React.FC<SubnameRegistrationProps> = ({ onSubnameRegi
         <div>
           <p>Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</p>
           {registeredSubname ? (
-            <p>Your registered subname: <strong>{registeredSubname}.darwinia.eth</strong></p>
+            <p>Your registered subname: <strong>{registeredSubname}.ringdao.eth</strong></p>
           ) : (
             <p>You don't have a registered subname yet.</p>
           )}
@@ -215,7 +215,7 @@ const SubnameRegistration: React.FC<SubnameRegistrationProps> = ({ onSubnameRegi
                 required
                 style={inputStyle}
               />
-              <span style={{ marginLeft: '5px' }}>.darwinia.eth</span>
+              <span style={{ marginLeft: '5px' }}>.ringdao.eth</span>
             </div>
             <button type="submit" style={buttonStyle} disabled={!isConnected || !isCorrectNetwork}>Register</button>
           </form>

@@ -88,7 +88,7 @@ const SubnameManagement: React.FC<SubnameManagementProps> = ({ refreshTrigger })
         <tbody>
           {subnames.map((subname, index) => (
             <tr key={index}>
-              <td style={tdStyle}>{subname.name}.darwinia.eth</td>
+              <td style={tdStyle}>{subname.name}.ringdao.eth</td>
               <td style={tdStyle}>{subname.owner}</td>
             </tr>
           ))}

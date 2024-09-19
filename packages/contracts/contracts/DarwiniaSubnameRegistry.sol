@@ -11,7 +11,7 @@ contract DarwiniaSubnameRegistry {
     bytes32 public constant DARWINIA_NODE = keccak256(
         abi.encodePacked(
             keccak256(abi.encodePacked(bytes32(0), keccak256(abi.encodePacked("eth")))), 
-            keccak256(abi.encodePacked("darwinia"))
+            keccak256(abi.encodePacked("ringdao"))
         )
     );
 

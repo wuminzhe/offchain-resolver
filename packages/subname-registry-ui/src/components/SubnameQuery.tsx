@@ -106,7 +106,7 @@ const SubnameQuery: React.FC = () => {
             required
             style={inputStyle}
           />
-          <span>.darwinia.eth</span>
+          <span>.ringdao.eth</span>
         </div>
         <button type="submit" style={buttonStyle} disabled={isLoading}>
           {isLoading ? 'Querying...' : 'Query'}
@@ -114,7 +114,7 @@ const SubnameQuery: React.FC = () => {
       </form>
       {queryResult && querySubname && (
         <div style={resultStyle}>
-          <strong>Address of {querySubname}.darwinia.eth:</strong>
+          <strong>Address of {querySubname}.ringdao.eth:</strong>
           <br />
           {queryResult}
         </div>
