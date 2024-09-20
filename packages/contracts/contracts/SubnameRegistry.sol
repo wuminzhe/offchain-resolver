@@ -81,25 +81,18 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
     }
 
     function commit(bytes32 commitment) public {
+        require(balanceOf(msg.sender) == 0, "Caller already has a subname");
+
         require(commitments[commitment] + MAX_COMMITMENT_AGE >= block.timestamp, "Unexpired commitment exists");
         commitments[commitment] = block.timestamp;
     }
 
-    function registerSubname(string calldata subname, bytes32 salt) public {
-        bytes32 commitment = keccak256(abi.encodePacked(subname, msg.sender, salt));
-        uint256 commitmentTimestamp = commitments[commitment];
-
-        require(commitmentTimestamp != 0, "Commitment doesn't exist");
-        require(block.timestamp >= commitmentTimestamp + MIN_COMMITMENT_AGE, "Commitment is too young");
-        require(block.timestamp <= commitmentTimestamp + MAX_COMMITMENT_AGE, "Commitment has expired");
-
-        require(valid(subname), "Not a valid subname");
-        require(balanceOf(msg.sender) == 0, "Caller already has a subname");
+    function registerSubname(string calldata subname, bytes32 secret) public {
+        bytes32 commitment = keccak256(abi.encodePacked(subname, msg.sender, secret));
+        _consumeCommitment(subname, commitment);
 
         bytes32 subnameNode = keccak256(abi.encodePacked(BASE_NODE, keccak256(bytes(subname))));
         require(subnameToTokenId[subnameNode] == 0, "Subname is already registered");
-
-        delete commitments[commitment];
 
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -110,6 +103,18 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
         _safeMint(msg.sender, newTokenId);
 
         emit SubnameRegistered(subname, msg.sender, newTokenId);
+    }
+
+    function _consumeCommitment(
+        string memory subname,
+        bytes32 commitment
+    ) internal {
+        require(commitments[commitment] != 0, "Commitment doesn't exist");
+        require(block.timestamp >= commitments[commitment] + MIN_COMMITMENT_AGE, "CommitmentTooNew");
+        require(block.timestamp <= commitments[commitment] + MAX_COMMITMENT_AGE, "CommitmentTooOld");
+        require(valid(subname), "Not a valid subname");
+
+        delete (commitments[commitment]);
     }
 
     function getSubnameOwner(string calldata subname) public view returns (address) {
