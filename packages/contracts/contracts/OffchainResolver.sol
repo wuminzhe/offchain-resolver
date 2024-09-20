@@ -56,22 +56,11 @@ contract OffchainResolver is IExtendedResolver, SupportsInterface {
      */
     function resolveWithProof(bytes calldata response, bytes calldata extraData) external view returns(bytes memory) {
         (address signer, bytes memory result) = SignatureVerifier.verify(extraData, response);
-        require(
-            signers[signer],
-            "SignatureVerifier: Invalid sigature");
+        require(signers[signer], "SignatureVerifier: Invalid sigature");
         return result;
     }
 
     function supportsInterface(bytes4 interfaceID) public pure override returns(bool) {
-        return interfaceID == type(IExtendedResolver).interfaceId || 
-        super.supportsInterface(interfaceID) ||
-        interfaceID == 0x3b3b57de;
-    }
-
-    // https://docs.ens.domains/ensip/1#contract-address-interface
-    function addr(bytes32 node) public view returns (address) {
-        bytes memory data = abi.encodeWithSelector(0x3b3b57de, node);
-        bytes memory result = this.resolve(abi.encodePacked(node), data);
-        return abi.decode(result, (address));
+        return interfaceID == type(IExtendedResolver).interfaceId || super.supportsInterface(interfaceID);
     }
 }

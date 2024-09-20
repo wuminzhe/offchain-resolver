@@ -8,7 +8,7 @@ module.exports = async ({deployments, network}) => {
 
     const {subname_registrant} = await getNamedAccounts();
 
-    const darwiniaSubnameRegistry = await ethers.getContract('DarwiniaSubnameRegistry');
+    const darwiniaSubnameRegistry = await ethers.getContract('SubnameRegistry');
     console.log("darwiniaSubnameRegistry", darwiniaSubnameRegistry.address);
 
     const subname = "bar";

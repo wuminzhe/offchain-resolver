@@ -43,12 +43,12 @@ export class DarwiniaDatabase implements Database {
   }
 
   async text(_name: string, _key: string): Promise<{ value: string; ttl: number }> {
-    // The DarwiniaSubnameRegistry doesn't support text records, so we'll return an empty string
+    // The SubnameRegistry doesn't support text records, so we'll return an empty string
     return { value: '', ttl: DEFAULT_TTL };
   }
 
   async contenthash(_name: string): Promise<{ contenthash: string; ttl: number }> {
-    // The DarwiniaSubnameRegistry doesn't support contenthash, so we'll return an empty string
+    // The SubnameRegistry doesn't support contenthash, so we'll return an empty string
     return { contenthash: '0x', ttl: DEFAULT_TTL };
   }
 }
