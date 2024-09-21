@@ -81,8 +81,6 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
     }
 
     function commit(bytes32 commitment) public {
-        require(balanceOf(msg.sender) == 0, "Caller already has a subname");
-
         require(commitments[commitment] + MAX_COMMITMENT_AGE >= block.timestamp, "Unexpired commitment exists");
         commitments[commitment] = block.timestamp;
     }
