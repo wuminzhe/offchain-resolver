@@ -27,11 +27,13 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
     uint256 public constant MIN_COMMITMENT_AGE = 1 minutes;
     uint256 public constant MAX_COMMITMENT_AGE = 24 hours;
 
+    uint256 public registrationFee;
+
     event SubnameRegistered(string indexed subname, address indexed owner, uint256 tokenId);
     event SubnameTransferred(string indexed subname, address indexed previousOwner, address indexed newOwner);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
-    constructor(string memory rootName) ERC721("Subname NFT", "SUB") {
+    constructor(string memory rootName, uint256 initialFee) ERC721("", "") {
         owner = msg.sender;
         BASE_NODE = keccak256(
             abi.encodePacked(
@@ -39,6 +41,7 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
                 keccak256(abi.encodePacked(rootName))
             )
         );
+        registrationFee = initialFee;
         emit OwnershipTransferred(address(0), owner);
     }
 
@@ -85,7 +88,9 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
         commitments[commitment] = block.timestamp;
     }
 
-    function registerSubname(string calldata subname, bytes32 secret) public {
+    function registerSubname(string calldata subname, bytes32 secret) public payable {
+        require(msg.value >= registrationFee, "Insufficient fee");
+        
         bytes32 commitment = keccak256(abi.encodePacked(subname, msg.sender, secret));
         _consumeCommitment(subname, commitment);
 
@@ -152,6 +157,16 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
         _transfer(msg.sender, newOwner, tokenId);
 
         emit SubnameTransferred(subname, msg.sender, newOwner);
+    }
+
+    function setRegistrationFee(uint256 newFee) public onlyOwner {
+        registrationFee = newFee;
+    }
+
+    function withdrawFees() public onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No fees to withdraw");
+        payable(owner).transfer(balance);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
