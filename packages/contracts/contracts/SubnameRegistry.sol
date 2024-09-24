@@ -4,11 +4,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract SubnameRegistry is ERC721, ERC721Enumerable {
     using Counters for Counters.Counter;
-    using ECDSA for bytes32;
 
     bytes32 public immutable BASE_NODE;
     address public owner;
@@ -33,12 +31,12 @@ contract SubnameRegistry is ERC721, ERC721Enumerable {
     event SubnameTransferred(string indexed subname, address indexed previousOwner, address indexed newOwner);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
-    constructor(string memory rootName, uint256 initialFee) ERC721("", "") {
+    constructor(string memory baseName, uint256 initialFee) ERC721(baseName, "SUB") {
         owner = msg.sender;
         BASE_NODE = keccak256(
             abi.encodePacked(
                 keccak256(abi.encodePacked(bytes32(0), keccak256(abi.encodePacked("eth")))), 
-                keccak256(abi.encodePacked(rootName))
+                keccak256(abi.encodePacked(baseName))
             )
         );
         registrationFee = initialFee;
